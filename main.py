@@ -36,7 +36,7 @@ import hashlib
 class Config:
     """Configurações centralizadas do sistema"""
     APP_NAME = 'IBVRD - Sistema de Cadastro'
-    VERSION = '2.1.0 (Refatorado)'
+    VERSION = '2.1.1 Enhanced'
     DB_NAME = 'ibvrd_enhanced.db'
     LOG_FILE = 'ibvrd_enhanced.log'
     CONFIG_FILE = 'config.json'
@@ -624,6 +624,33 @@ class DatabaseManager:
             cur.execute('SELECT valor FROM config WHERE chave=?', (key,))
             row = cur.fetchone()
             return row['valor'] if row else None
+        
+    
+    def _create_ui(self):
+        """Cria interface"""
+        # Header
+        self._create_header()
+        
+        # Main container
+        main = tk.Frame(self.root, bg=self.theme['bg'])
+        main.pack(fill='both', expand=True, padx=10, pady=10)
+        
+        # Notebook
+        self.notebook = ttk.Notebook(main)
+        self.notebook.pack(fill='both', expand=True)
+        
+        # Tabs
+        self._create_tab_cadastro()
+        self._create_tab_consulta()
+        self._create_tab_aniversariantes()
+        self._create_tab_eventos()
+        self._create_tab_relatorios()
+        self._create_tab_configuracoes()
+        self._create_tab_sobre()  # Adicione esta linha
+        
+        # Status bar
+        self.status_bar = StatusBar(self.root)
+        self.status_bar.pack(side='bottom', fill='x')
     
     def get_statistics(self) -> Dict:
         """Retorna estatísticas do sistema"""
@@ -1144,7 +1171,8 @@ class IBVRDApp:
         self._create_ui()
         self._load_initial_data()
         self._check_auto_backup()
-        
+        self._create_tab_sobre()  # Adicione esta linha
+
         # Tratamento de exceções
         sys.excepthook = self._handle_exception
         
@@ -1706,6 +1734,105 @@ class IBVRDApp:
             command=self._clear_cache,
             width=20
         ).pack(side='left', padx=5, pady=5)
+
+    def _create_tab_sobre(self):
+        """Cria aba Sobre com informações do criador"""
+        tab = ttk.Frame(self.notebook)
+        self.notebook.add(tab, text='ℹ️ Sobre')
+        
+        # Container principal
+        main_frame = tk.Frame(tab, bg=self.theme['bg'])
+        main_frame.pack(fill='both', expand=True, padx=20, pady=20)
+        
+        # Título
+        title_label = tk.Label(
+            main_frame,
+            text='Sobre o Sistema',
+            font=('Arial', 16, 'bold'),
+            bg=self.theme['bg'],
+            fg=self.theme['fg']
+        )
+        title_label.pack(pady=(10, 20))
+        
+        # Frame para informações do criador
+        creator_frame = tk.LabelFrame(
+            main_frame,
+            text='Desenvolvedor',
+            font=('Arial', 12, 'bold'),
+            padx=20,
+            pady=20
+        )
+        creator_frame.pack(fill='x', pady=10)
+        
+        # Informações do criador
+        info_text = """
+        Nome: Hugo Enrique Wenner
+        Contato: hugowenner5@gmail.com - (31) 997183-6063
+        Função: Desenvolvedor do Sistema
+        
+        Este sistema foi desenvolvido para a Igreja Batista 
+        Vida no Reino de Deus (IBVRD) com o objetivo de 
+        facilitar o cadastro e gestão de membros e eventos.
+        """
+        
+        info_label = tk.Label(
+            creator_frame,
+            text=info_text,
+            font=('Arial', 11),
+            bg=self.theme['bg'],
+            fg=self.theme['fg'],
+            justify='left'
+        )
+        info_label.pack(anchor='w')
+        
+        # Frame para informações do sistema
+        system_frame = tk.LabelFrame(
+            main_frame,
+            text='Informações do Sistema',
+            font=('Arial', 12, 'bold'),
+            padx=20,
+            pady=20
+        )
+        system_frame.pack(fill='x', pady=10)
+        
+        # Informações do sistema
+        system_info = f"""
+        Nome: {Config.APP_NAME}
+        Versão: {Config.VERSION}
+        Tecnologia: Python com Tkinter
+        Banco de Dados: SQLite
+        
+        Sistema desenvolvido com foco em:
+        - Facilidade de uso
+        - Organização de dados
+        - Relatórios detalhados
+        - Gestão de eventos
+        """
+        
+        system_label = tk.Label(
+            system_frame,
+            text=system_info,
+            font=('Arial', 11),
+            bg=self.theme['bg'],
+            fg=self.theme['fg'],
+            justify='left'
+        )
+        system_label.pack(anchor='w')
+        
+        # Frame para direitos autorais
+        copyright_frame = tk.Frame(main_frame, bg=self.theme['bg'])
+        copyright_frame.pack(side='bottom', fill='x', pady=20)
+        
+        copyright_text = f"© {datetime.now().year} - [Seu Nome] - Todos os direitos reservados"
+        
+        copyright_label = tk.Label(
+            copyright_frame,
+            text=copyright_text,
+            font=('Arial', 9),
+            bg=self.theme['bg'],
+            fg=self.theme['fg']
+        )
+        copyright_label.pack()
     
     # --- LOAD & UI UPDATE (mantido) ---
     def _load_initial_data(self):
