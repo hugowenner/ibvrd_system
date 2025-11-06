@@ -1,0 +1,48 @@
+# Ignorar pastas de build e distribuição
+/build/
+dist/
+
+# Backups e relatórios
+/backups/
+reports/
+
+# Dependências
+node_modules/
+venv/
+.env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de log
+*.log
+logs/
+debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Configurações locais e sensíveis
+/config/*.local.*
+/config/*.dev.*
+.env.local
+.env.*
+
+# Arquivos temporários e de cache
+*.tmp
+*.temp
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# IDEs e editores
+.vscode/
+.idea/
+*.iml
+
+# Outras pastas de trabalho
+/__pycache__/
+.cache/
+tmp/
